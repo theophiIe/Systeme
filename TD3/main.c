@@ -8,20 +8,35 @@
 // \param	path			Nom/chemin du fichier à afficher
 // \return					-1 si échec à l'ouverture, 0 sinon
 int print(const char *path)
-{  
+{ 
 	IO_FILE file;
-	file = IO_open(path, O_RDWR);
+	int valWrite;
+	int valClose;
 	char c;
+	file = IO_open(path, O_RDWR);
+	
+	if(file.desc==-1)
+	{
+		fprintf(stderr, "Erreur ouverture du fichier\n");
+		return -1;
+	}
+	
+	int valRead = IO_char_read(file, &c);
 	
 	while(valRead <= 0)
 	{
+		printf("%c",c);
+		
 		valRead = IO_char_read(file, &c);
-	
-		int IO_char_write(file,const char c);
+		if(valRead == -1)
+			fprintf(stderr, "Erreur lors de la lecture\n");
 	}
 	
-	int IO_close(file);
+	valClose = IO_close(file);
+	if(valClose == -1)
+			fprintf(stderr, "Erreur lors de la fermeture du fichier\n");
 	
+	return 0;
 }
 
 // Copie de fichier
@@ -30,7 +45,7 @@ int print(const char *path)
 // \return					-1 si échec à l'ouverture, 0 sinon
 int copy(const char *path1, const char *path2)
 {
-	
+	return 0;
 }
 
 // Déplacement de fichier
@@ -39,7 +54,7 @@ int copy(const char *path1, const char *path2)
 // \return					-1 si échec à l'ouverture, 0 sinon
 int move(const char *path1, const char *path2)
 {
-	
+	return 0;
 }
 
 // Comparaison entre deux fichiers
@@ -49,13 +64,13 @@ int move(const char *path1, const char *path2)
 //							1 si fichiers identiques, 0 sinon
 int are_the_same(const char *path1, const char *path2) 
 {
-	
+	return 0;
 }
 
 void check_print() {
 	int nstdout = creat("test2.txt", 0644);
 	int tmp, tmp2;
-
+	
 	system("echo 'This file\nis\n\nGREAT!\n' >test1.txt");
 
 	tmp = dup(fileno(stdout));

@@ -15,10 +15,8 @@ IO_FILE IO_open(const char *path,int access)
 	int fd = open(path, access | O_CREAT, 0644);
 	file.desc = fd;
 	
-	if(fd == -1)
-	{         
+	if(fd == -1)         
         fprintf(stderr,"impossible d'ouvrir le fichier erreur : %s\n", strerror(errno));
-	}
 	
 	else
 	{
