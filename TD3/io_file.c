@@ -11,6 +11,7 @@
 IO_FILE IO_open(const char *path,int access)
 {
 	IO_FILE file;
+	
 	file.path = malloc(256*sizeof(char));
 	int fd = open(path, access | O_CREAT, 0644);
 	file.desc = fd;
