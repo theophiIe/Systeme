@@ -57,6 +57,22 @@ int copy(const char *path1, const char *path2)
 // \return					-1 si échec à l'ouverture, 0 sinon
 int move(const char *path1, const char *path2)
 {
+	int valCopy = copy(path1, path2);
+	
+	if(valCopy == -1)
+	{
+		fprintf(stderr, "Erreur lors de la copie du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	int valRemove = IO_remove(path1);
+	
+	if(valRemove == -1)
+	{
+		fprintf(stderr, "Erreur lors de la suppression du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
 	return 0;
 }
 
@@ -151,7 +167,7 @@ void check_are_the_same () {
 int main(int argc, char **argv) {
 	check_print();
 	//check_copy();
-	//check_move();
+	check_move();
 	//check_are_the_same();
 
 	return 0;
