@@ -7,37 +7,39 @@
 // Affichage du contenu d'un fichier
 // \param	path			Nom/chemin du fichier à afficher
 // \return					-1 si échec à l'ouverture, 0 sinon
-int print(const char *path)
-{ 
-	IO_FILE file;
-	int valWrite;
-	int valClose;
-	char c;
-	file = IO_open(path, O_RDWR);
+int print(const char *path) 
+{
+	IO_FILE file = IO_open(path, O_RDONLY);
 	
-	if(file.desc==-1)
+	if(file.desc == -1 || file.path == NULL)
 	{
-		fprintf(stderr, "Erreur ouverture du fichier\n");
+		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
-	int valRead = IO_char_read(file, &c);
+	char caractere;
+	int valRead = 1, valClose;
 	
-	while(valRead <= 0)
+	do
 	{
-		printf("%c",c);
+		valRead = IO_char_read(file, &caractere);
 		
-		valRead = IO_char_read(file, &c);
-		if(valRead == -1)
-			fprintf(stderr, "Erreur lors de la lecture\n");
+		if(valRead)
+			printf("%c", caractere);
 	}
+	while(valRead > 0);
 	
 	valClose = IO_close(file);
+	
 	if(valClose == -1)
-			fprintf(stderr, "Erreur lors de la fermeture du fichier\n");
+	{
+		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
 	
 	return 0;
 }
+
 
 // Copie de fichier
 // \param	path1			Nom/chemin du fichier source
@@ -48,6 +50,7 @@ int copy(const char *path1, const char *path2)
 	return 0;
 }
 
+
 // Déplacement de fichier
 // \param	path1			Nom/chemin du fichier source
 // \param	path2			Nom/chemin du fichier destination
@@ -57,20 +60,22 @@ int move(const char *path1, const char *path2)
 	return 0;
 }
 
+
 // Comparaison entre deux fichiers
 // \param	path1			Nom/chemin du premier fichier
 // \param	path2			Nom/chemin du second fichier
 // \return					-1 si échec à l'ouverture,
 //							1 si fichiers identiques, 0 sinon
-int are_the_same(const char *path1, const char *path2) 
+int are_the_same(const char *path1, const char *path2)
 {
 	return 0;
 }
 
+
 void check_print() {
 	int nstdout = creat("test2.txt", 0644);
-	int tmp, tmp2;
-	
+	int tmp;
+
 	system("echo 'This file\nis\n\nGREAT!\n' >test1.txt");
 
 	tmp = dup(fileno(stdout));
@@ -86,7 +91,7 @@ void check_print() {
 	dup2(tmp, fileno(stdout));
 
 	close(nstdout); close(tmp);
-
+	
 	if (!system("diff test1.txt test2.txt >diff.log"))
 		printf("'print()' test has succeeded.\n");
 	else
@@ -147,9 +152,9 @@ void check_are_the_same () {
 
 int main(int argc, char **argv) {
 	check_print();
-	check_copy();
-	check_move();
-	check_are_the_same();
+	//check_copy();
+	//check_move();
+	//check_are_the_same();
 
 	return 0;
 }

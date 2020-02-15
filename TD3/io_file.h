@@ -1,6 +1,15 @@
 #ifndef H_IO_FILE
 #define H_IO_FILE
 
+#include <stdlib.h>		//Fonctions C standard antérieures à POSIX
+#include <stdio.h>		//Bibliothèque d’E/S standard
+#include <sys/types.h>	//Définition de types standard
+#include <sys/stat.h>	//Accès aux caractèristiques d’un fichier
+#include <errno.h>		//Gestion des erreurs
+#include <unistd.h>		//Appels système antérieurs à POSIX 
+#include <fcntl.h>		//Manipuler un descripteur de fichier  
+#include <string.h>		//Manipulation de chaînes de caractères
+
 // La structure IO_FILE contient les champs suivants :
 // - le descripteur de fichier (entier)
 // - le nom/chemin du fichier (chaîne de caractères)
