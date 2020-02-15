@@ -61,7 +61,7 @@ int copy(const char *path1, const char *path2)
 	int valRead, valClose;
 	
 	char *stockCara = malloc(256*sizeof(char));
-	int cmptStock = 0;
+	int cmptStockRead = 0;
 	
 	if (stockCara == NULL)
 	{
@@ -75,8 +75,8 @@ int copy(const char *path1, const char *path2)
 		
 		if(valRead)
 		{
-			stockCara[cmptStock] = caractere;
-			cmptStock++;
+			stockCara[cmptStockRead] = caractere;
+			cmptStockRead++;
 		}
 	}
 	while(valRead > 0);
@@ -102,20 +102,22 @@ int copy(const char *path1, const char *path2)
 	}
 	
 	int valWrite;
-	cmptStock = 0;
+	int cmptStockWrite = 0;
 		
 	do
 	{
-		valWrite = IO_char_write(file, stockCara[cmptStock]);
+		valWrite = IO_char_write(file, stockCara[cmptStockWrite]);
+		
+		if(valWrite == -1)
 		{
 			fprintf(stderr, "Erreur lors de l'ecriture du fichier : %s\n", strerror(errno));
 			return -1;
 		}
 		
-		cmptStock++;
+		cmptStockWrite++;
 		
 	}
-	while(valWrite < cmptStock && valWrite > 0);
+	while(cmptStockWrite < cmptStockRead && valWrite > 0);
 	
 	valClose = IO_close(file);
 	
@@ -247,7 +249,7 @@ void check_are_the_same () {
 int main(int argc, char **argv) {
 	check_print();
 	check_copy();
-	//check_move();
+	check_move();
 	//check_are_the_same();
 
 	return 0;
