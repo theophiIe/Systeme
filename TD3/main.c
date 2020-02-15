@@ -19,7 +19,7 @@ int print(const char *path)
 	}
 	
 	char caractere;
-	int valRead = 1, valClose;
+	int valRead, valClose;
 	
 	do
 	{
@@ -48,6 +48,86 @@ int print(const char *path)
 // \return					-1 si échec à l'ouverture, 0 sinon
 int copy(const char *path1, const char *path2)
 {
+	IO_FILE file = IO_open(path1, O_RDONLY);
+	
+	//Test de l'ouverture du fichier
+	if(file.desc == -1 || file.path == NULL)
+	{
+		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	char caractere;
+	int valRead, valClose;
+	
+	char *stockCara = malloc(256*sizeof(char));
+	int cmptStock = 0;
+	
+	if (stockCara == NULL)
+	{
+		fprintf(stderr, "Erreur probleme memoire : %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+		
+	do
+	{
+		valRead = IO_char_read(file, &caractere);
+		
+		if(valRead)
+		{
+			stockCara[cmptStock] = caractere;
+			cmptStock++;
+		}
+	}
+	while(valRead > 0);
+	
+	valClose = IO_close(file);
+	
+	//Test de la fermeture du fichier
+	if(valClose == -1)
+	{
+		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX //
+	
+	file = IO_open(path2, O_WRONLY);
+	
+	//Test de l'ouverture du fichier
+	if(file.desc == -1 || file.path == NULL)
+	{
+		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	int valWrite;
+	cmptStock = 0;
+		
+	do
+	{
+		valWrite = IO_char_write(file, stockCara[cmptStock]);
+		{
+			fprintf(stderr, "Erreur lors de l'ecriture du fichier : %s\n", strerror(errno));
+			return -1;
+		}
+		
+		cmptStock++;
+		
+	}
+	while(valWrite < cmptStock && valWrite > 0);
+	
+	valClose = IO_close(file);
+	
+	//Test de la fermeture du fichier
+	if(valClose == -1)
+	{
+		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	free(stockCara);
+	
 	return 0;
 }
 
@@ -166,8 +246,8 @@ void check_are_the_same () {
 
 int main(int argc, char **argv) {
 	check_print();
-	//check_copy();
-	check_move();
+	check_copy();
+	//check_move();
 	//check_are_the_same();
 
 	return 0;
