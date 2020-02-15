@@ -11,6 +11,7 @@ int print(const char *path)
 {
 	IO_FILE file = IO_open(path, O_RDONLY);
 	
+	//Test de l'ouverture du fichier
 	if(file.desc == -1 || file.path == NULL)
 	{
 		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
@@ -31,6 +32,7 @@ int print(const char *path)
 	
 	valClose = IO_close(file);
 	
+	//Test de la fermeture du fichier
 	if(valClose == -1)
 	{
 		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
@@ -39,7 +41,6 @@ int print(const char *path)
 	
 	return 0;
 }
-
 
 // Copie de fichier
 // \param	path1			Nom/chemin du fichier source
@@ -50,7 +51,6 @@ int copy(const char *path1, const char *path2)
 	return 0;
 }
 
-
 // Déplacement de fichier
 // \param	path1			Nom/chemin du fichier source
 // \param	path2			Nom/chemin du fichier destination
@@ -59,7 +59,6 @@ int move(const char *path1, const char *path2)
 {
 	return 0;
 }
-
 
 // Comparaison entre deux fichiers
 // \param	path1			Nom/chemin du premier fichier
@@ -70,7 +69,6 @@ int are_the_same(const char *path1, const char *path2)
 {
 	return 0;
 }
-
 
 void check_print() {
 	int nstdout = creat("test2.txt", 0644);
