@@ -12,7 +12,7 @@ int print(const char *path)
 	IO_FILE file = IO_open(path, O_RDONLY);
 	
 	//Test de l'ouverture du fichier
-	if(file.desc == -1 || file.path == NULL)
+	if(path == NULL)
 	{
 		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
@@ -51,7 +51,7 @@ int copy(const char *path1, const char *path2)
 	IO_FILE file = IO_open(path1, O_RDONLY);
 	
 	//Test de l'ouverture du fichier
-	if(file.desc == -1 || file.path == NULL)
+	if(path1 == NULL)
 	{
 		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
@@ -95,7 +95,7 @@ int copy(const char *path1, const char *path2)
 	file = IO_open(path2, O_WRONLY);
 	
 	//Test de l'ouverture du fichier
-	if(file.desc == -1 || file.path == NULL)
+	if(path2 == NULL)
 	{
 		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
@@ -165,6 +165,67 @@ int move(const char *path1, const char *path2)
 //							1 si fichiers identiques, 0 sinon
 int are_the_same(const char *path1, const char *path2)
 {
+	//Ouverture des fichiers à comparer
+	IO_FILE file1 = IO_open(path1, O_RDONLY);
+	IO_FILE file2 = IO_open(path2, O_RDONLY);
+
+	//Test d'ouverture
+	if(path1 == NULL || path2 == NULL)
+	{
+		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	char *stockCaraFile1 = malloc(256*sizeof(char));
+	char *stockCaraFile2 = malloc(256*sizeof(char));
+	
+	if (stockCaraFile1 == NULL || stockCaraFile2 == NULL)
+	{
+		fprintf(stderr, "Erreur probleme memoire : %s\n", strerror(errno));
+		return -1;
+	}
+	
+	int cmptStockReadFile1 = 0;
+	int cmptStockReadFile2 = 0;
+	
+	int valReadFile1, valReadFile2;
+	char caractereFile1, caractereFile2;
+	
+	//Lecture des caracteres du fichier 1
+	do
+	{
+		valReadFile1 = IO_char_read(file1, &caractereFile1);
+		
+		if(valReadFile1)
+		{
+			stockCaraFile1[cmptStockReadFile1] = caractereFile1;
+			cmptStockReadFile1++;
+		}
+	}while(valReadFile1 > 0);
+	
+	//Lecture des caracteres du fichier 2
+	do{
+		
+		valReadFile2 = IO_char_read(file2, &caractereFile2);
+		
+		if(valReadFile2)
+		{
+			stockCaraFile2[cmptStockReadFile2] = caractereFile2;
+			cmptStockReadFile2++;
+		}
+	}while(valReadFile2 > 0);
+	
+	//Comparatif des deux fichiers
+	if(!strcmp(stockCaraFile1,stockCaraFile2))
+	{
+		free(stockCaraFile1);
+		free(stockCaraFile2);
+		return 1;
+	}
+	
+	free(stockCaraFile1);
+	free(stockCaraFile2);
+	
 	return 0;
 }
 
@@ -250,7 +311,7 @@ int main(int argc, char **argv) {
 	check_print();
 	check_copy();
 	check_move();
-	//check_are_the_same();
+	check_are_the_same();
 
 	return 0;
 }
