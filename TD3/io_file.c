@@ -14,7 +14,7 @@ IO_FILE IO_open(const char *path, int access)
 	
 	if(!file.path)
 	{
-		fprintf(stderr, "Erreur allocation de mémoir : %s\n", strerror(errno));
+		fprintf(stderr, "IO_open erreur allocation de mémoir : %s\n", strerror(errno));
 		return file;
 	}
 	
@@ -29,7 +29,7 @@ IO_FILE IO_open(const char *path, int access)
 			
 			if(fd1 == -1)
 			{
-				fprintf(stderr, "Erreur lors de la création du fichier : %s\n", strerror(errno));
+				fprintf(stderr, "IO_open erreur lors de la création du fichier : %s\n", strerror(errno));
 				return file;
 			}
 			
@@ -41,7 +41,7 @@ IO_FILE IO_open(const char *path, int access)
 		
 	if(fd2 == -1)
 	{
-		fprintf(stderr, "Erreur lors de l'ouverture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "IO_open erreur lors de l'ouverture du fichier : %s\n", strerror(errno));
 		return file;	
 	}
 	
@@ -58,7 +58,7 @@ int IO_close(IO_FILE file)
 	
 	if(valClose == -1)
 	{
-		fprintf(stderr,"Errreur lors de la fermeture du fichier : %s\n", strerror(errno));
+		fprintf(stderr,"IO_close errreur lors de la fermeture du fichier : %s\n", strerror(errno));
         return -1;
 	}
 	
@@ -72,7 +72,7 @@ int IO_remove(const char *path)
 	
 	if(valUnlink != 0)
 	{
-		fprintf(stderr,"Errreur suppresion du fichier : %s\n", strerror(errno));
+		fprintf(stderr,"IO_remove errreur suppresion du fichier : %s\n", strerror(errno));
         return -1;
 	}
 	
@@ -88,7 +88,7 @@ int IO_char_read(IO_FILE file, char *c)
 		
 		if(valRead == -1)
 		{
-			fprintf(stderr,"Errreur de lecture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_char_read errreur de lecture : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -107,7 +107,7 @@ int IO_char_write(IO_FILE file, const char c)
 		
 		if(valWrite == -1)
 		{
-			fprintf(stderr,"Errreur d'ecriture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_char_write errreur d'ecriture : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -126,7 +126,7 @@ int IO_string_read(IO_FILE file, char *string, int maxSize)
 		
 		if(valRead == -1)
 		{
-			fprintf(stderr,"Errreur de lecture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_string_read errreur de lecture : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -145,7 +145,7 @@ int IO_string_write(IO_FILE file, const char *string, int size)
 		
 		if(valWrite == -1)
 		{
-			fprintf(stderr,"Errreur d'ecriture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_string_write errreur d'ecriture : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -164,7 +164,7 @@ int IO_int_read(IO_FILE file, int *n)
 		
 		if(valRead == -1)
 		{
-			fprintf(stderr,"Errreur de lecture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_int_read errreur de lecture : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -175,37 +175,30 @@ int IO_int_read(IO_FILE file, int *n)
 	return -1;
 }
 
-static int print_int(int nb)
+int nbre_cara_int(float nbr)
 {
-    if (nb < 0)
-    {
-        write(1, "-", 1);
-        nb *= -1;
-    }
-    if (nb > 9)
-    {
-        print_int(nb / 10);
-        print_int(nb % 10);
-    }
-    else
-    {
-        nb += '0';
-        return nb;
-    }
-    
-    return nb;
+	int nbrCara = 0;
+	
+	while(nbr < 1 && nbr > 0)
+	{
+		nbr = nbr/10;
+		nbrCara++;
+	}
+	
+	return nbrCara;
 }
 
 int IO_int_write(IO_FILE file, const int n)
 {
-	int nb = n;
 	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
-		int valWrite = write(file.desc, &n, print_int(nb));
+		
+		float nb = n;
+		int valWrite = write(file.desc, &n, nbre_cara_int(nb));
 		
 		if(valWrite == -1)
 		{
-			fprintf(stderr,"Errreur d'ecriture : %s\n", strerror(errno));
+			fprintf(stderr,"IO_int_write errreur d'ecriture : %s\n", strerror(errno));
 			return -1;
 		}
 		

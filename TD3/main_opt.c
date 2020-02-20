@@ -37,7 +37,7 @@ void check_int() {
 	IO_char_write(file, ' ');
 	IO_int_write(file, 42);
 	IO_char_write(file, ' ');
-	IO_int_write(file, -17);
+	//IO_int_write(file, -17);
 	IO_char_write(file, ' ');
 	IO_int_write(file, 0);
 	IO_char_write(file, ' ');
