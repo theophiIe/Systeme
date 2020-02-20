@@ -14,7 +14,7 @@ int print(const char *path)
 	//Test de l'ouverture du fichier
 	if(path == NULL)
 	{
-		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "print erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -35,7 +35,7 @@ int print(const char *path)
 	//Test de la fermeture du fichier
 	if(valClose == -1)
 	{
-		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "print erreur fermeture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -53,7 +53,7 @@ int copy(const char *path1, const char *path2)
 	//Test de l'ouverture du fichier
 	if(path1 == NULL)
 	{
-		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "copy erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -65,7 +65,7 @@ int copy(const char *path1, const char *path2)
 	
 	if (stockCara == NULL)
 	{
-		fprintf(stderr, "Erreur probleme memoire : %s\n", strerror(errno));
+		fprintf(stderr, "copy erreur probleme memoire : %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 		
@@ -86,7 +86,7 @@ int copy(const char *path1, const char *path2)
 	//Test de la fermeture du fichier
 	if(valClose == -1)
 	{
-		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "copy erreur fermeture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -97,7 +97,7 @@ int copy(const char *path1, const char *path2)
 	//Test de l'ouverture du fichier
 	if(path2 == NULL)
 	{
-		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "copy erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -110,7 +110,7 @@ int copy(const char *path1, const char *path2)
 		
 		if(valWrite == -1)
 		{
-			fprintf(stderr, "Erreur lors de l'ecriture du fichier : %s\n", strerror(errno));
+			fprintf(stderr, "copy erreur lors de l'ecriture du fichier : %s\n", strerror(errno));
 			return -1;
 		}
 		
@@ -124,7 +124,7 @@ int copy(const char *path1, const char *path2)
 	//Test de la fermeture du fichier
 	if(valClose == -1)
 	{
-		fprintf(stderr, "Erreur fermeture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "copy erreur fermeture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -143,7 +143,7 @@ int move(const char *path1, const char *path2)
 	
 	if(valCopy == -1)
 	{
-		fprintf(stderr, "Erreur lors de la copie du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "move erreur lors de la copie du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -151,7 +151,7 @@ int move(const char *path1, const char *path2)
 	
 	if(valRemove == -1)
 	{
-		fprintf(stderr, "Erreur lors de la suppression du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "move erreur lors de la suppression du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -172,7 +172,7 @@ int are_the_same(const char *path1, const char *path2)
 	//Test d'ouverture
 	if(path1 == NULL || path2 == NULL)
 	{
-		fprintf(stderr, "Erreur ouverture du fichier : %s\n", strerror(errno));
+		fprintf(stderr, "are_the_same erreur ouverture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
 	
@@ -181,7 +181,7 @@ int are_the_same(const char *path1, const char *path2)
 	
 	if (stockCaraFile1 == NULL || stockCaraFile2 == NULL)
 	{
-		fprintf(stderr, "Erreur probleme memoire : %s\n", strerror(errno));
+		fprintf(stderr, "are_the_same erreur probleme memoire : %s\n", strerror(errno));
 		return -1;
 	}
 	
