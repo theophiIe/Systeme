@@ -1,7 +1,7 @@
 #ifndef H_IO_FILE
 #define H_IO_FILE
 
-#include <stdlib.h>		//Fonctions C standard antérieures à POSIX
+#include "stdlib.h"		//Fonctions C standard antérieures à POSIX
 #include <stdio.h>		//Bibliothèque d’E/S standard
 #include <sys/types.h>	//Définition de types standard
 #include <sys/stat.h>	//Accès aux caractèristiques d’un fichier

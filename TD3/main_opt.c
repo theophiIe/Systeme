@@ -46,6 +46,7 @@ void check_int() {
 
 	IO_close(file);
 
+/*
 	file = IO_open("test.txt", O_RDONLY);
 
 	IO_int_read(file, &i);
@@ -59,13 +60,13 @@ void check_int() {
 
 	IO_close(file);
 
-	IO_remove("test.txt");
+	//IO_remove("test.txt");*/
 }
 
 int main(int argc, char **argv) {
 	check_string();
 	printf("\n");
-	//check_int();
+	check_int();
 
 	return 0;
 }
