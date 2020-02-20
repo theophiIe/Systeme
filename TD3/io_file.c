@@ -120,7 +120,7 @@ int IO_char_write(IO_FILE file, const char c)
 
 int IO_string_read(IO_FILE file, char *string, int maxSize)
 {
-	if(file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
 		int valRead = read(file.desc, string, maxSize);
 		
@@ -139,9 +139,9 @@ int IO_string_read(IO_FILE file, char *string, int maxSize)
 
 int IO_string_write(IO_FILE file, const char *string, int size)
 {
-	if(file.access == O_WRONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
-		int valWrite = write(file.desc, &string, size);
+		int valWrite = write(file.desc, string, size);
 		
 		if(valWrite == -1)
 		{

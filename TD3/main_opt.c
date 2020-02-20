@@ -14,13 +14,13 @@ void check_string() {
 
 	IO_close(file);
 
-	//file = IO_open("test.txt", O_RDONLY);
+	file = IO_open("test.txt", O_RDONLY);
 
-	//IO_string_read(file, buffer, 31);
+	IO_string_read(file, buffer, 31);
 
-	//IO_close(file);
+	IO_close(file);
 
-	//IO_remove("test.txt");
+	IO_remove("test.txt");
 
 	printf("%s", buffer);
 }
