@@ -58,7 +58,9 @@ int IO_char_write(
 	IO_FILE file,
 	const char c);
 
-/*
+
+// Fonction EXERCICE SUPPLEMENTAIR
+
 // Lecture d'une chaîne de caractère dans un fichier
 // \param	file			Structure IO_FILE où lire
 // \param	string			Chaîne lue
@@ -96,6 +98,6 @@ int IO_int_read(
 int IO_int_write(
 	IO_FILE file,
 	const int n);
-*/
+
 
 #endif
