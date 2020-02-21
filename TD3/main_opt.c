@@ -30,14 +30,14 @@ void check_int() {
 	int i;
 
 	printf("Integer test:\nbase: %d %d %d %d\nfile: ", 42, -17, 0, 42359428);
-/*
+
 	file = IO_open("test.txt", O_CREAT | O_WRONLY);
 
 	IO_char_write(file, '-');
 	IO_char_write(file, ' ');
 	IO_int_write(file, 42);
 	IO_char_write(file, ' ');
-	//IO_int_write(file, -17);
+	IO_int_write(file, -17);
 	IO_char_write(file, ' ');
 	IO_int_write(file, 0);
 	IO_char_write(file, ' ');
@@ -45,7 +45,6 @@ void check_int() {
 	IO_char_write(file, ' ');
 
 	IO_close(file);
-*/
 
 	file = IO_open("test.txt", O_RDONLY);
 
@@ -64,7 +63,7 @@ void check_int() {
 }
 
 int main(int argc, char **argv) {
-	//check_string();
+	check_string(); 
 	printf("\n");
 	check_int();
 

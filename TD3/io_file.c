@@ -156,6 +156,7 @@ int IO_string_write(IO_FILE file, const char *string, int size)
 	return -1;
 }
 
+//A finir
 int IO_int_read(IO_FILE file, int *n)
 {
 	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
@@ -175,26 +176,15 @@ int IO_int_read(IO_FILE file, int *n)
 	return -1;
 }
 
-int nbre_cara_int(float nbr)
-{
-	int nbrCara = 0;
-	
-	while(nbr < 1 && nbr > 0)
-	{
-		nbr = nbr/10;
-		nbrCara++;
-	}
-	
-	return nbrCara;
-}
-
+//A finir
 int IO_int_write(IO_FILE file, const int n)
 {
 	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
+		char chaine[100];
+		snprintf (chaine, sizeof chaine, "%d", n);
 		
-		float nb = n;
-		int valWrite = write(file.desc, &n, nbre_cara_int(nb));
+		int valWrite = write(file.desc, chaine, 10);
 		
 		if(valWrite == -1)
 		{
