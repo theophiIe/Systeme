@@ -175,10 +175,6 @@ int move(const char *path1, const char *path2)
 //							1 si fichiers identiques, 0 sinon
 int are_the_same(const char *path1, const char *path2)
 {
-	//Ouverture des fichiers à comparer
-	//IO_FILE file1 = IO_open(path1, O_RDONLY);
-	//IO_FILE file2 = IO_open(path2, O_RDONLY);
-
 	//Test d'ouverture
 	if(path1 == NULL || path2 == NULL)
 	{
@@ -219,7 +215,17 @@ int are_the_same(const char *path1, const char *path2)
 		}
 	}while(valReadFile1 > 0);
 	
-	IO_close(file1);
+	int valClose = IO_close(file1);
+	
+	//Test de fermeture de file1
+	if(valClose == -1)
+	{
+		free(stockCaraFile1);
+		free(stockCaraFile2);
+		
+		fprintf(stderr, "are_the_same erreur fermeture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
 	
 	//Ouverture du second fichier
 	IO_FILE file2 = IO_open(path2, O_RDONLY);
@@ -236,7 +242,17 @@ int are_the_same(const char *path1, const char *path2)
 		}
 	}while(valReadFile2 > 0);
 	
-	IO_close(file2);
+	valClose = IO_close(file2);
+	
+	//Test de fermeture de file2
+	if(valClose == -1)
+	{
+		free(stockCaraFile1);
+		free(stockCaraFile2);
+		
+		fprintf(stderr, "are_the_same erreur fermeture du fichier : %s\n", strerror(errno));
+		return -1;
+	}
 	
 	//Comparatif des deux fichiers
 	if(!strcmp(stockCaraFile1,stockCaraFile2))
