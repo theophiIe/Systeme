@@ -63,6 +63,7 @@ int copy(const char *path1, const char *path2)
 	char *stockCara = malloc(256*sizeof(char));
 	int cmptStockRead = 0;
 	
+	//Test de l'allocation de mémoire 
 	if (stockCara == NULL)
 	{
 		free(stockCara);
@@ -70,7 +71,8 @@ int copy(const char *path1, const char *path2)
 		fprintf(stderr, "copy erreur probleme memoire : %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-		
+	
+	//Lecture de file
 	do
 	{
 		valRead = IO_char_read(file, &caractere);
@@ -93,9 +95,8 @@ int copy(const char *path1, const char *path2)
 		fprintf(stderr, "copy erreur fermeture du fichier : %s\n", strerror(errno));
 		return -1;
 	}
-	
-	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX //
-	
+		
+	//Ouverture du second fichier
 	file = IO_open(path2, O_WRONLY);
 	
 	//Test de l'ouverture du fichier
@@ -109,7 +110,8 @@ int copy(const char *path1, const char *path2)
 	
 	int valWrite;
 	int cmptStockWrite = 0;
-		
+	
+	//Ecriture dans le second fichier des caracters du premier ficher
 	do
 	{
 		valWrite = IO_char_write(file, stockCara[cmptStockWrite]);
