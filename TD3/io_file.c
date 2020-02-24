@@ -82,7 +82,7 @@ int IO_remove(const char *path)
 
 int IO_char_read(IO_FILE file, char *c)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_RDONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
 		int valRead = read(file.desc, c, 1);
 		
@@ -101,7 +101,7 @@ int IO_char_read(IO_FILE file, char *c)
 
 int IO_char_write(IO_FILE file, const char c)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_WRONLY || file.access == O_RDWR)
 	{
 		int valWrite = write(file.desc, &c, 1);
 		
@@ -120,7 +120,7 @@ int IO_char_write(IO_FILE file, const char c)
 
 int IO_string_read(IO_FILE file, char *string, int maxSize)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_RDONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
 		int valRead = read(file.desc, string, maxSize);
 		
@@ -139,7 +139,7 @@ int IO_string_read(IO_FILE file, char *string, int maxSize)
 
 int IO_string_write(IO_FILE file, const char *string, int size)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_WRONLY || file.access == O_RDWR)
 	{
 		int valWrite = write(file.desc, string, size);
 		
@@ -159,9 +159,9 @@ int IO_string_write(IO_FILE file, const char *string, int size)
 //A finir
 int IO_int_read(IO_FILE file, int *n)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_RDONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
 	{
-		int valRead = read(file.desc, n, 1);
+		int valRead = read(file.desc, n, 2);
 		
 		if(valRead == -1)
 		{
@@ -179,12 +179,12 @@ int IO_int_read(IO_FILE file, int *n)
 //A finir
 int IO_int_write(IO_FILE file, const int n)
 {
-	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_RDONLY || file.access == O_RDWR)
+	if(file.access == (O_CREAT | O_WRONLY) || file.access == (O_CREAT | O_RDWR) || file.access == O_WRONLY || file.access == O_RDWR)
 	{
-		char chaine[100];
-		snprintf (chaine, sizeof chaine, "%d", n);
+		//char chaine[100];
+		//snprintf (chaine, sizeof chaine, "%d", n);
 		
-		int valWrite = write(file.desc, chaine, 10);
+		int valWrite = write(file.desc, &n, 3);
 		
 		if(valWrite == -1)
 		{
