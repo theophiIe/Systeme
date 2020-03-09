@@ -168,6 +168,34 @@ int test_intg_scenario_do_and_redo() {
 }
 
 /**
+ * Integration test -- succession of valid and invalid actions on a lexicon.
+ *
+ * @return     0 on SUCCES, 1 on FAILURE
+ */
+int test_intg_scenario_disney() {
+	struct lexc *L;
+	int rc;
+
+	L = lexc_init("disney", 1);
+	rc = !L;
+
+	rc |=  lexc_add(L, "mickey");
+	rc |=  lexc_add(L, "pluto");
+	rc |=  lexc_add(L, "dingo");
+	rc |= !lexc_check(L, "horace");
+	rc |=  lexc_check(L, "pluto");
+	rc |= !lexc_add(L, "dingo");
+	rc |=  lexc_remove(L, "mickey");
+	rc |=  lexc_remove(L, "pluto");
+	rc |= !lexc_check(L, "pluto");
+	rc |= !lexc_remove(L, "donald");
+
+	lexc_fini(L);
+
+	return rc;
+}
+
+/**
  * Executes the unit and integration tests.
  * 
  * Uncomment them once their implementation are done.
@@ -177,10 +205,12 @@ void execute_test() {
 	printf("[U-TEST] remove: %s\n", test_unit_remove() ? "FAILURE" : "SUCCESS");
 	printf("[U-TEST] check: %s\n", test_unit_check() ? "FAILURE" : "SUCCESS");
 
-	/* printf("[I-TEST] scenario-alphabet: %s\n", */
-	/* 	   test_intg_scenario_alphabet() ? "FAILURE" : "SUCCESS"); */
-	/* printf("[I-TEST] scenario-do-and-redo: %s\n", */
-	/* 	   test_intg_scenario_do_and_redo() ? "FAILURE" : "SUCCESS"); */
+	printf("[I-TEST] scenario-alphabet: %s\n",
+		   test_intg_scenario_alphabet() ? "FAILURE" : "SUCCESS");
+	printf("[I-TEST] scenario-do-and-redo: %s\n",
+		   test_intg_scenario_do_and_redo() ? "FAILURE" : "SUCCESS");
+	printf("[I-TEST] scenario-disney: %s\n",
+		   test_intg_scenario_disney() ? "FAILURE" : "SUCCESS");
 }
 
 /**
@@ -192,16 +222,10 @@ void execute() {
 
 	L = lexc_init("test", 1);
 
-	do
-	  {
-	    
-	    printf("> ");
-	    
-	    fgets(buffer, CMD_BUFFER, stdin);
-	    
-	  }
-	while (cmd_interpret(L, buffer));
-	
+	do {
+		fgets(buffer, CMD_BUFFER, stdin);
+	} while (cmd_interpret(L, buffer));
+
 	lexc_fini(L);
 }
 
