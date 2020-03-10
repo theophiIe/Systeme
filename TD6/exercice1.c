@@ -15,15 +15,15 @@ void excution(int cmpt)
 			break;
 			
 		case 1:
-			execlp("ls", "ls", "/home/user", NULL);
+			execlp("ls", "ls", "/home/user", "-R", NULL);
 			break;
 			
 		case 2:
-			execlp("find", "find", "/home/user/Bureau", "-type" ,"d", NULL);
+			execlp("find", "find", "/home/user/Bureau/S4", "-type" ,"d", NULL);
 			break;
 			
 		case 3:
-			execlp("find", "find", "/home/user/Bureau", "-type" ,"f", NULL);
+			execlp("find", "find", "/home/user/Bureau/S4", "-type" ,"f", NULL);
 			break;
 			
 		default:
@@ -53,6 +53,7 @@ int main(int argc, char **argv)
 		pid = wait(&status);
 		printf("le processus fils : %d est fini\n", pid);
 	}
+	
 	exit(0);
 }
 
