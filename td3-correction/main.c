@@ -89,7 +89,7 @@ int sontIdentiques (const char * chemin1, const char * chemin2) {
 
 void verifAffichage () {
 	int nstdout = creat ("test2.txt", 0644);
-	int tmp, tmp2;
+	int tmp;
 
 	system ("echo 'This file\nis\n\nGREAT!\n' >test1.txt");
 
