@@ -135,5 +135,32 @@ int main()
 	
 	free(tst.tab);
 	
+	//Question 1.5
+	
+	thread_struct_tab ts_t;
+	
+	int alea_taille = rand() % 10;
+	
+	ts_t.taille_tab = alea_taille;
+	ts_t.average    = 0;
+	ts_t.tab = malloc(ts_t.taille_tab * sizeof(int));
+	
+	printf("element du tab : ");
+	for(int i = 0; i< ts_t.taille_tab; i++)
+	{
+		case_tab = rand() % (100 * (i + 1));
+		ts_t.tab[i] = case_tab;
+		
+		printf("%d ", ts_t.tab[i]);
+	}
+	printf("\n");
+	
+	pthread_create(&ts_t.tid, NULL, print_average_tab, &ts_t);
+	pthread_join(ts_t.tid, NULL);
+	
+	printf("La moyenne du tableau est : %d\n", ts_t.average);
+	
+	free(ts_t.tab);
+	
 	return 0;
 }
