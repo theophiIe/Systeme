@@ -53,10 +53,12 @@ void *print_alea_int2(void *arg)
 	pthread_exit(NULL);
 }
 
-void gestion_thread_struct(thread_arg_t ta, void *(*start_routine) (void *))
+thread_arg_t gestion_thread_struct(thread_arg_t ta, void *(*start_routine) (void *))
 {
 	pthread_create(&ta.tid, NULL, start_routine, &ta);
 	pthread_join(ta.tid, NULL);
+	
+	return ta;
 }
 
 int main()
@@ -76,8 +78,11 @@ int main()
 	ta.targ = 10;
 	ta.tret = 0;
 	
-	gestion_thread_struct(ta, print_alea_int2);
+	ta = gestion_thread_struct(ta, print_alea_int2);
 	
+	//~ pthread_create(&ta.tid, NULL, print_alea_int2, &ta);
+	//~ pthread_join(ta.tid, NULL);
+
 	printf("Valeur de sortie alea int : %d\n", ta.tret);
 	
 	return 0;
