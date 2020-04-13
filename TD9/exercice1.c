@@ -29,8 +29,8 @@ void gestion_thread(void *(*start_routine) (void *), void *arg)
 	pthread_join(tid, NULL);
 }
 
-typedef struct {
-
+typedef struct 
+{
   //Thread ID
   pthread_t tid;
 
@@ -61,6 +61,29 @@ thread_arg_t gestion_thread_struct(thread_arg_t ta, void *(*start_routine) (void
 	return ta;
 }
 
+typedef struct 
+{
+	pthread_t tid;
+	
+	int *tab;
+	int taille_tab;
+	int average;
+} thread_struct_tab;
+
+void *print_average_tab(void *arg)
+{
+	thread_struct_tab *tst = (thread_struct_tab *) arg;
+	
+	for(int i = 0; i < tst -> taille_tab; i++)
+	{
+		tst -> average += tst -> tab[i];
+	}
+	
+	tst -> average = (tst -> average) / 5;
+	
+	pthread_exit(NULL);
+}
+
 int main()
 {
 	//Question 1.1
@@ -78,12 +101,39 @@ int main()
 	ta.targ = 10;
 	ta.tret = 0;
 	
-	ta = gestion_thread_struct(ta, print_alea_int2);
+	//	xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  //
+		ta = gestion_thread_struct(ta, print_alea_int2);
+	//							OU 							 //
+	//~ pthread_create(&ta.tid, NULL, print_alea_int2, &ta); //
+	//~ pthread_join(ta.tid, NULL);						   	 //
+	//	xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  //
 	
-	//~ pthread_create(&ta.tid, NULL, print_alea_int2, &ta);
-	//~ pthread_join(ta.tid, NULL);
-
 	printf("Valeur de sortie alea int : %d\n", ta.tret);
+	
+	//Question 1.4
+	int case_tab;
+	thread_struct_tab tst;
+	
+	tst.taille_tab = 5;
+	tst.average    = 0;
+	tst.tab = malloc(tst.taille_tab * sizeof(int));
+	
+	printf("element du tab : ");
+	for(int i = 0; i< tst.taille_tab; i++)
+	{
+		case_tab = rand() % (100 * (i + 1));
+		tst.tab[i] = case_tab;
+		
+		printf("%d ", tst.tab[i]);
+	}
+	printf("\n");
+	
+	pthread_create(&tst.tid, NULL, print_average_tab, &tst);
+	pthread_join(tst.tid, NULL);
+	
+	printf("La moyenne du tableau est : %d\n", tst.average);
+	
+	free(tst.tab);
 	
 	return 0;
 }
