@@ -27,7 +27,6 @@ typedef struct
 	int *tab;		//< Tableau d'entiers à traiter
 	int start;		//< Indice de début de traitement
 	int end;		//< Indice de fin de traitement (non compris)
-	//int res;		//< Résultat local
 	int *res_glob;	//< Résultat global
 } message_t;
 
@@ -50,23 +49,6 @@ void * sommeTableau (void * arg)
 	return NULL;
 }
 
-// Fin de la réduction -- calcule la somme globale
-// \param	msg				Messages issus de l'exécution des threads,
-//							contiennent les résultats locaux
-// \param	nbThreads		Nombre de threads, et donc de messages
-// \return					Résultat global
-/*
-int reducSomme (message_t * msg, int nbThreads)
-{
-	int res = 0;
-	
-	for(int i = 0; i < nbThreads; i++)
-		res += msg[i].res;
-	
-	return res;
-}
-*/
-
 // Fonction thread -- calcule la moyenne locale d'un tableau
 // \param	arg 			Message transmis par le thread père
 // \return					NULL
@@ -85,25 +67,6 @@ void * moyenneTableau (void * arg)
 	
 	return NULL;
 }
-
-// Fin de la réduction -- calcule la moyenne globale
-// \param	msg				Messages issus de l'exécution des threads,
-//							contiennent les résultats locaux
-// \param	nbThreads		Nombre de threads, et donc de messages
-// \return					Résultat global
-/*
-int reducMoyenne (message_t * msg, int nbThreads)
-{
-	int res = 0;
-	
-	for(int i = 0; i < nbThreads; i++)
-		res += msg[i].res;
-	
-	res /= nbThreads;
-	
-	return res;
-}
-*/
 
 // Fonction thread -- calcule le maximum local d'un tableau
 // \param	arg 			Message transmis par le thread père
@@ -126,26 +89,6 @@ void * maxTableau (void * arg)
 	return NULL;
 }
 
-// Fin de la réduction -- calcule le maximum global
-// \param	msg				Messages issus de l'exécution des threads,
-//							contiennent les résultats locaux
-// \param	nbThreads		Nombre de threads, et donc de messages
-// \return					Résultat global
-/*
-int reducMax (message_t * msg, int nbThreads)
-{
-	int res = -1;
-	
-	for(int i = 0; i < nbThreads; i++)
-	{
-		if(res < msg[i].res)
-			res = msg[i].res;
-	}
-	
-	return res;
-}
-*/
-
 // Fonction thread -- calcule le minimum local d'un tableau
 // \param	arg 			Message transmis par le thread père
 // \return					NULL
@@ -166,26 +109,6 @@ void * minTableau (void * arg)
 	
 	return NULL;	
 }
-
-// Fin de la réduction -- calcule le minimum global
-// \param	msg				Messages issus de l'exécution des threads,
-//							contiennent les résultats locaux
-// \param	nbThreads		Nombre de threads, et donc de messages
-// \return					Résultat global
-/*
-int reducMin (message_t * msg, int nbThreads)
-{
-	int res = 101;
-	
-	for(int i = 0; i < nbThreads; i++)
-	{
-		if(res > msg[i].res)
-			res = msg[i].res;
-	}
-	
-	return res;
-}
-*/
 
 // NE PAS TOUCHER
 // Fonction de vérification -- somme des éléments du tableau
@@ -416,32 +339,6 @@ void programmePrincipal (const arg_t arg)
 	// Jointure
 	for(int i = 0; i < arg.nbThreads; i++)
 		pthread_join(tab_tid[i], NULL);
-		
-	// Réduction et affichage du résultat
-	/*
-	switch (arg.code)
-	{
-		case 0 :
-			res = reducSomme(mt, arg.nbThreads);
-			break;
-			
-		case 1 :
-			res = reducMoyenne(mt, arg.nbThreads);
-			break;
-			
-		case 2 :
-			res = reducMax(mt, arg.nbThreads);
-			break;
-			
-		case 3 :
-			res = reducMin(mt, arg.nbThreads);
-			break;
-			
-		default:
-			printf("Erreur arg.code \n");
-			exit(EXIT_FAILURE);
-	}
-	*/
 	
 	// NE PAS TOUCHER
 	if ( (* (decodeOpcodeVerif (arg.code) ) ) (tab, arg.tailleTableau, res_glob) )
