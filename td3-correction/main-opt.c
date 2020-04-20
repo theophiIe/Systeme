@@ -46,15 +46,21 @@ void testEntier () {
 
 	fic = SE_ouverture ("test.txt", O_RDONLY);
 
-	SE_lectureEntier (fic, &i);
-	printf ("%d ", i);
-	SE_lectureEntier (fic, &i);
-	printf ("%d ", i);
-	SE_lectureEntier (fic, &i);
-	printf ("%d ", i);
-	SE_lectureEntier (fic, &i);
-	printf ("%d\n", i);
-
+	//~ SE_lectureEntier (fic, &i);
+	//~ printf ("%d ", i);
+	//~ SE_lectureEntier (fic, &i);
+	//~ printf ("%d ", i);
+	//~ SE_lectureEntier (fic, &i);
+	//~ printf ("%d ", i);
+	//~ SE_lectureEntier (fic, &i);
+	//~ printf ("%d\n", i);
+	
+	while(SE_lectureEntier (fic, &i) > 0)
+	{
+		printf ("%d ", i);
+	}
+	printf ("TEST\n");
+	
 	SE_fermeture (fic);
 
 	SE_suppression ("test.txt");
