@@ -37,6 +37,8 @@ void * sommeTableauMut (void * arg)
 	
 	printf("Fin du calcul pour le thread mut n°%ld\n", mt -> tid);
 	
+	pthread_exit(NULL);
+	
 	return NULL;
 }
 
@@ -44,13 +46,36 @@ void * sommeTableauBar (void * arg)
 {
 	message_t *mt = (message_t *) arg;
 	
-	if(pthread_barrier_wait(mt -> bar))
-		printf("Le thread n°%ld n'est plus bloqué\n", mt -> tid);
+	switch(pthread_barrier_wait(mt -> bar))
+	{
+		case 0:
+			printf("Le thread n°%ld n'est plus bloqué\n", mt -> tid);
+			break;
+			
+		case PTHREAD_BARRIER_SERIAL_THREAD :
+			printf("Le thread n°%ld débloque les autres threads pour la synchro\n", mt -> tid);
+			break;
+			
+		default:
+			printf("Le thread n°%ld est en erreur\n", mt -> tid);
+	}
 	
 	for(int i = mt -> start; i < mt -> end; i++)
 		*(mt -> res) += mt -> tab[i];
-
-	printf("Fin du calcul pour le thread bar n°%ld\n", mt -> tid);
+	
+	switch(pthread_barrier_wait(mt -> bar))
+	{
+		case 0:
+			printf("Le thread n°%ld n'est plus bloqué\n", mt -> tid);
+			break;
+			
+		case PTHREAD_BARRIER_SERIAL_THREAD :
+			printf("Le thread n°%ld débloque les autres threads pour la synchro\n", mt -> tid);
+			break;
+			
+		default:
+			printf("Le thread n°%ld est en erreur\n", mt -> tid);
+	}
 	
 	return NULL;
 }
@@ -59,8 +84,19 @@ void * sommeTableau (void * arg)
 {
 	message_t *mt = (message_t *) arg;
 	
-	if(pthread_barrier_wait(mt -> bar))
-		printf("Le thread n°%ld n'est plus bloqué\n", mt -> tid);
+	switch(pthread_barrier_wait(mt -> bar))
+	{
+		case 0:
+			printf("Le thread n°%ld n'est plus bloqué\n", mt -> tid);
+			break;
+			
+		case PTHREAD_BARRIER_SERIAL_THREAD :
+			printf("Le thread n°%ld débloque les autres threads pour la synchro\n", mt -> tid);
+			break;
+			
+		default:
+			printf("Le thread n°%ld est en erreur\n", mt -> tid);
+	}
 	
 	for(int i = mt -> start; i < mt -> end; i++)
 	{
@@ -76,8 +112,6 @@ void * sommeTableau (void * arg)
 
 arg_t analyseArguments (int argc, char ** argv)
 {
-	printf("nbre d'arg %d\n", argc);
-	
 	if(argc != 3)
 	{
 		printf("Erreur, nombre d'argument non valide\n");
@@ -90,7 +124,7 @@ arg_t analyseArguments (int argc, char ** argv)
 	printf("Le nombre de thread est de : %d\n", at.nbThreads);
 	
 	at.tailleTableau = atoi(argv[2]);
-	printf("Le taille du tableau est de : %d\n", at.tailleTableau);
+	printf("Le taille du tableau est de : %d\n\n", at.tailleTableau);
 		
 	return at;
 }
@@ -122,8 +156,8 @@ void programmePrincipalMut (const arg_t arg)
 	int dec = arg.tailleTableau/arg.nbThreads;
 	
 	//Allocation de la mémoire
-	tab 	= genereTableau (arg.tailleTableau);
-	mt 		= malloc(arg.nbThreads * sizeof(message_t));
+	tab = genereTableau (arg.tailleTableau);
+	mt 	= malloc(arg.nbThreads * sizeof(message_t));
 	
 	pthread_mutex_init(&mut, NULL);
 	
@@ -147,9 +181,8 @@ void programmePrincipalMut (const arg_t arg)
 	pthread_mutex_destroy(&mut);
 	
 	//Résultat
-	for( int i = 0 ; i < arg.nbThreads; i++ )
-		printf("Le résultat de l'addition est %d\n", *(mt[i].res));
-		
+	printf("Le résultat de l'addition est %d\n", res);
+	
 	//Libération de la mémoire
 	free(mt);
 	free(tab);
@@ -167,8 +200,8 @@ void programmePrincipalBar (const arg_t arg)
 	int dec = arg.tailleTableau/arg.nbThreads;
 	
 	//Allocation de la mémoire
-	tab 	= genereTableau (arg.tailleTableau);
-	mt 		= malloc(arg.nbThreads * sizeof(message_t));
+	tab = genereTableau (arg.tailleTableau);
+	mt 	= malloc(arg.nbThreads * sizeof(message_t));
 	
 	pthread_barrier_init(&bar, NULL, arg.nbThreads);
 	
@@ -192,8 +225,7 @@ void programmePrincipalBar (const arg_t arg)
 	pthread_barrier_destroy(&bar);
 	
 	//Résultat
-	for( int i = 0 ; i < arg.nbThreads; i++ )
-		printf("Le résultat de l'addition est %d\n", *(mt[i].res));
+	printf("Le résultat de l'addition est %d\n", res);
 		
 	//Libération de la mémoire
 	free(mt);
@@ -241,9 +273,8 @@ void programmePrincipal (const arg_t arg)
 	pthread_barrier_destroy(&bar);
 	
 	//Résultat
-	for( int i = 0 ; i < arg.nbThreads; i++ )
-		printf("Le résultat de l'addition est %d\n", *(mt[i].res));
-		
+	printf("Le résultat de l'addition est %d\n", res);
+	
 	//Libération de la mémoire
 	free(mt);
 	free(tab);
