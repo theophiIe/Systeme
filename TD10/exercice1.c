@@ -349,8 +349,6 @@ void programmePrincipal (const arg_t arg)
 	void *start_routine;
 	
 	int * tab; 
-	int res;
-	int dec;
 	
 	// Allocation de la mémoire
 	tab = genereTableau (arg.tailleTableau);
@@ -446,7 +444,7 @@ void programmePrincipal (const arg_t arg)
 	*/
 	
 	// NE PAS TOUCHER
-	if ( (* (decodeOpcodeVerif (arg.code) ) ) (tab, arg.tailleTableau, res) )
+	if ( (* (decodeOpcodeVerif (arg.code) ) ) (tab, arg.tailleTableau, res_glob) )
 		printf ("Le resultat est juste.\n");
 		
 	else printf ("Le resultat est faux.\n");
