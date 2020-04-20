@@ -27,7 +27,8 @@ typedef struct
 	int *tab;		//< Tableau d'entiers à traiter
 	int start;		//< Indice de début de traitement
 	int end;		//< Indice de fin de traitement (non compris)
-	int res;		//< Résultat local
+	//int res;		//< Résultat local
+	int *res_glob;	//< Résultat global
 } message_t;
 
 // Alias de pointeurs de fonction
@@ -41,9 +42,10 @@ void * sommeTableau (void * arg)
 	message_t *mt = (message_t *) arg;
 	
 	for(int i = mt -> start; i < mt -> end; i++)
-		mt -> res += mt -> tab[i];
-	
-	pthread_exit(NULL);
+	{
+		//mt -> res += mt -> tab[i];
+		*(mt -> res_glob) += mt -> tab[i];
+	}
 	
 	return NULL;
 }
@@ -53,6 +55,7 @@ void * sommeTableau (void * arg)
 //							contiennent les résultats locaux
 // \param	nbThreads		Nombre de threads, et donc de messages
 // \return					Résultat global
+/*
 int reducSomme (message_t * msg, int nbThreads)
 {
 	int res = 0;
@@ -62,6 +65,7 @@ int reducSomme (message_t * msg, int nbThreads)
 	
 	return res;
 }
+*/
 
 // Fonction thread -- calcule la moyenne locale d'un tableau
 // \param	arg 			Message transmis par le thread père
@@ -71,13 +75,15 @@ void * moyenneTableau (void * arg)
 	message_t *mt = (message_t *) arg;
 	
 	for(int i = mt->start; i < mt->end; i++)
-		mt -> res += mt -> tab[i];
+	{
+		//mt -> res += mt -> tab[i];
+		*(mt -> res_glob) += mt -> tab[i];
+	}
 		
-	mt -> res = mt -> res / (mt -> end - mt -> start);
+	//mt -> res /= (mt -> end - mt -> start);
+	*(mt -> res_glob) /= (mt -> end - mt -> start);
 	
-	pthread_exit(NULL);	
-	
-		return NULL;
+	return NULL;
 }
 
 // Fin de la réduction -- calcule la moyenne globale
@@ -85,6 +91,7 @@ void * moyenneTableau (void * arg)
 //							contiennent les résultats locaux
 // \param	nbThreads		Nombre de threads, et donc de messages
 // \return					Résultat global
+/*
 int reducMoyenne (message_t * msg, int nbThreads)
 {
 	int res = 0;
@@ -96,6 +103,7 @@ int reducMoyenne (message_t * msg, int nbThreads)
 	
 	return res;
 }
+*/
 
 // Fonction thread -- calcule le maximum local d'un tableau
 // \param	arg 			Message transmis par le thread père
@@ -104,15 +112,16 @@ void * maxTableau (void * arg)
 {
 	message_t *mt = (message_t *) arg;
 	
-	mt -> res = -1;
+	//mt -> res = -1;
 	
 	for(int i = mt->start; i < mt->end; i++)
 	{
-		if(mt -> res < mt -> tab[i])
-			mt -> res = mt -> tab[i];
+		//if(mt -> res < mt -> tab[i])
+			//mt -> res = mt -> tab[i];
+			
+		if(*(mt -> res_glob) < mt -> tab[i])
+			*(mt -> res_glob) = mt -> tab[i];
 	}	
-	
-	pthread_exit(NULL);	
 	
 	return NULL;
 }
@@ -122,6 +131,7 @@ void * maxTableau (void * arg)
 //							contiennent les résultats locaux
 // \param	nbThreads		Nombre de threads, et donc de messages
 // \return					Résultat global
+/*
 int reducMax (message_t * msg, int nbThreads)
 {
 	int res = -1;
@@ -134,6 +144,7 @@ int reducMax (message_t * msg, int nbThreads)
 	
 	return res;
 }
+*/
 
 // Fonction thread -- calcule le minimum local d'un tableau
 // \param	arg 			Message transmis par le thread père
@@ -142,15 +153,16 @@ void * minTableau (void * arg)
 {
 	message_t *mt = (message_t *) arg;
 	
-	mt -> res = 101;
+	//mt -> res = 101;
 	
 	for(int i = mt->start; i < mt->end; i++)
 	{
-		if(mt -> res > mt -> tab[i])
-			mt -> res = mt -> tab[i];
+		//if(mt -> res > mt -> tab[i])
+			//mt -> res = mt -> tab[i];
+			
+		if(*(mt -> res_glob) > mt -> tab[i])
+			*(mt -> res_glob) = mt -> tab[i];
 	}	
-	
-	pthread_exit(NULL);
 	
 	return NULL;	
 }
@@ -160,6 +172,7 @@ void * minTableau (void * arg)
 //							contiennent les résultats locaux
 // \param	nbThreads		Nombre de threads, et donc de messages
 // \return					Résultat global
+/*
 int reducMin (message_t * msg, int nbThreads)
 {
 	int res = 101;
@@ -172,6 +185,7 @@ int reducMin (message_t * msg, int nbThreads)
 	
 	return res;
 }
+*/
 
 // NE PAS TOUCHER
 // Fonction de vérification -- somme des éléments du tableau
@@ -251,7 +265,7 @@ arg_t analyseArguments (int argc, char ** argv)
 	
 	arg_t at;
 	
-	at.nbThreads 	 = atoi(argv[1]);
+	at.nbThreads = atoi(argv[1]);
 	printf("Le nombre de thread est de : %d\n", at.nbThreads);
 	
 	at.tailleTableau = atoi(argv[2]);
@@ -342,7 +356,7 @@ void programmePrincipal (const arg_t arg)
 	tab = genereTableau (arg.tailleTableau);
 	
 	mt 		= malloc(arg.nbThreads * sizeof(message_t));
-	tab_tid	= malloc(arg.nbThreads * sizeof(pthread_t));
+	tab_tid	= malloc(arg.nbThreads * sizeof(pthread_t));	
 	
 	// Initialisation des variables et création des threads
 	
@@ -370,15 +384,32 @@ void programmePrincipal (const arg_t arg)
 			exit(EXIT_FAILURE);
 	}
 	
-	dec = arg.tailleTableau/arg.nbThreads;
+	//~ dec = arg.tailleTableau/arg.nbThreads;
 	
-	for(int i = 0; i < arg.nbThreads; i++)
+	//~ for(int i = 0; i < arg.nbThreads; i++)
+	//~ {
+		//~ mt[i].start = i*dec;
+		//~ mt[i].end   = i*dec + dec;
+		//~ //mt[i].res   = 0;
+		//~ mt[i].tab = tab;
+	
+	//~ }
+	
+	int res_glob = 0;
+	
+	int tab_size_thread = arg.tailleTableau / arg.nbThreads;
+	for( int i = 0 ; i < arg.nbThreads ; i++)
 	{
-		mt[i].start = i*dec;
-		mt[i].end   = i*dec + dec;
-		mt[i].res   = 0;
-		mt[i].tab = tab;
-	
+		mt[i].tab   = tab;
+		mt[i].start = i * tab_size_thread;
+
+		if( ( (i+1) * tab_size_thread )  >  arg.tailleTableau )
+			mt[i].end  = arg.tailleTableau;
+			
+		else 
+			mt[i].end = (i+1) * tab_size_thread;
+
+		mt[i].res_glob = &res_glob;
 	}
 	
 	for(int i = 0; i < arg.nbThreads; i++)
@@ -389,6 +420,7 @@ void programmePrincipal (const arg_t arg)
 		pthread_join(tab_tid[i], NULL);
 		
 	// Réduction et affichage du résultat
+	/*
 	switch (arg.code)
 	{
 		case 0 :
@@ -411,6 +443,7 @@ void programmePrincipal (const arg_t arg)
 			printf("Erreur arg.code \n");
 			exit(EXIT_FAILURE);
 	}
+	*/
 	
 	// NE PAS TOUCHER
 	if ( (* (decodeOpcodeVerif (arg.code) ) ) (tab, arg.tailleTableau, res) )
@@ -419,7 +452,9 @@ void programmePrincipal (const arg_t arg)
 	else printf ("Le resultat est faux.\n");
 	
 	// FIN
-	printf("le resultat est : %d\n", res);
+	
+	for( int i = 0 ; i < arg.nbThreads ; i++ )
+		printf("mt[%d].res_glob = %d\n", i, *(mt[i].res_glob));
 	
 	// Libération de la mémoire
 	free(tab_tid);
